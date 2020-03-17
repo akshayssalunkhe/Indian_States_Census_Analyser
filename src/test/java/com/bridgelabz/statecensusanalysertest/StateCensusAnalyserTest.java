@@ -4,21 +4,23 @@ import com.bridgelabzs.statecensusanalyser.StateCensusAnalyser;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class StateCensusAnalyserTest {
-    private static final String STATE_CENSUS_DATA_PATH = "StateCensusData.csv";
+
+    //GIVING FILE PATH
+    private static final String STATE_CENSUS_DATA_PATH = "src/test/resources/StateCensusData.csv";
+
+    //CREATING OBJECT
     StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
 
     @Test
     public void givenStatesCensusCSVFile_WhenNumberOfRecordsMatches_ShouldReturnTrue() {
-      int numberOfRecord = stateCensusAnalyser.loadStateCSVData(STATE_CENSUS_DATA_PATH);
-      Assert.assertEquals(30,numberOfRecord);
+        try {
+            int numberOfRecord = stateCensusAnalyser.loadStateCSVData(STATE_CENSUS_DATA_PATH);
+            Assert.assertEquals(29, numberOfRecord);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
-//public class CensusAnalyserProblemTest {
-//    private static final String STATE_CENSUS_DATA_PATH = "./src/test/resources/StateCensusData.csv";
-//    @Test
-//    public void name() {
-//        CensusAnalyserProblem censusAnalyserProblem=new CensusAnalyserProblem();
-//        int numberOfRecord = censusAnalyserProblem.recordCheck(STATE_CENSUS_DATA_PATH);
-//        Assert.assertEquals(30,numberOfRecord);
-//    }
