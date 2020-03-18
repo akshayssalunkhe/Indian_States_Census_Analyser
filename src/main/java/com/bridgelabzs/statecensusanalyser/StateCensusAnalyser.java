@@ -34,6 +34,8 @@ public class StateCensusAnalyser {
                 csvStateCensusIterator.next();
                 numberOfRecords++;
             }
+        } catch (RuntimeException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER, "WRONG DELIMITER");
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
