@@ -3,7 +3,7 @@ package com.bridgelabzs.statecensusanalyserexception;
 public class StateCensusAnalyserException extends Exception {
     //CREATING ENUM
     public enum ExceptionType {
-        NO_SUCH_FILE_FOUND;
+        NO_SUCH_FILE_FOUND, NO_SUCH_FILE_EXTENSION;
     }
 
     //CREATING OBJECT
