@@ -53,6 +53,9 @@ public class StateCensusAnalyser {
     //METHOD TO LOAD CSV STATE CODE FILE
     public int loadStatesCodeCSVData(String filePath) throws IOException, StateCensusAnalyserException {
         int numberOfRecords = 0;
+        String extension = getFileExtension(filePath);
+        if (!extension.equals("csv"))
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             CsvToBean<CSVStates> csvToBean = new CsvToBeanBuilder(reader)
                     .withType(CSVStates.class)
@@ -65,7 +68,7 @@ public class StateCensusAnalyser {
                 csvStatesIterator.next();
                 numberOfRecords++;
             }
-        }catch (NoSuchFileException e) {
+        } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
         return numberOfRecords;
