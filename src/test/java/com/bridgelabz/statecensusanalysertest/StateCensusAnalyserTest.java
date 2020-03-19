@@ -15,6 +15,7 @@ public class StateCensusAnalyserTest {
 
     //GIVING WRONG FILE PATH
     private static final String STATE_CENSUS_DATA_WRONG_PATH = "src/test/resources/StateCensusDa.csv";
+    private static final String STATE_CODE_CSV_WRONG_PATH = "src/test/resources/StateCo.csv";
 
     //GIVING WRONG FILE EXTENSION
     private static final String FILE_WITH_WRONG_EXTENSION = "src/test/resources/StateCensusDa.txt";
@@ -87,6 +88,19 @@ public class StateCensusAnalyserTest {
         try {
             int numberOfRecord = stateCensusAnalyser.loadStatesCodeCSVData(STATES_CODE_CSV_PATH);
             Assert.assertEquals(37, numberOfRecord);
+        } catch (IOException  e) {
+            e.printStackTrace();
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenStateCodeCSVFile_WhenIncorrect_ShouldReturnCustomException() {
+        try {
+            stateCensusAnalyser.loadStatesCodeCSVData(STATE_CODE_CSV_WRONG_PATH);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, e.type);
         } catch (IOException e) {
             e.printStackTrace();
         }
