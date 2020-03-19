@@ -12,6 +12,6 @@ public class StateCensusAnalyserException extends Exception {
 
     //CREATING ENUM
     public enum ExceptionType {
-        NO_SUCH_FILE_FOUND, NO_SUCH_FILE_EXTENSION,WRONG_DELIMITER_OR_HEADER;
+        NO_SUCH_FILE_FOUND, NO_SUCH_FILE_EXTENSION, WRONG_DELIMITER_OR_HEADER;
     }
 }
