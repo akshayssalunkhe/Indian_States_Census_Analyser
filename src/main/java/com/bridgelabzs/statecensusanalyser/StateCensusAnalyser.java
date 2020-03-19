@@ -1,5 +1,6 @@
 package com.bridgelabzs.statecensusanalyser;
 
+import com.bridgelabzs.csvstates.CSVStates;
 import com.bridgelabzs.statecensusanalyserexception.StateCensusAnalyserException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -47,5 +48,24 @@ public class StateCensusAnalyser {
         if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0) {
             return filePath.substring(filePath.lastIndexOf(".") + 1);
         } else return "";
+    }
+
+    //METHOD TO LOAD CSV STATE CODE FILE
+    public int loadStatesCodeCSVData(String filePath) throws IOException {
+        int numberOfRecords = 0;
+        try (Reader reader = Files.newBufferedReader(Paths.get(filePath));) {
+            CsvToBean<CSVStates> csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(CSVStates.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            Iterator<CSVStates> csvStatesIterator = csvToBean.iterator();
+            //LOOP TO ITERATE THROUGH FILE
+            while (csvStatesIterator.hasNext()) {
+                csvStatesIterator.next();
+                numberOfRecords++;
+            }
+        }
+        return numberOfRecords;
     }
 }
