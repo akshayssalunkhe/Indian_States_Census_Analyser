@@ -23,6 +23,7 @@ public class StateCensusAnalyserTest {
 
     //GIVING WRONG FILE DELIMITER
     private static final String FILE_WITH_INCORRECT_DELIMITER = "src/test/resources/StateCensusDataIncorrectDelimiter.csv";
+    private static final String STATE_CODE_CSV_FILE_WITH_INCORRECT_DELIMITER = "src/test/resources/StateCodeIncorrectDelimiter.csv";
 
     //GIVING WRONG FILE HEADER
     private static final String FILE_WITH_WRONG_HEADER = "src/test/resources/StateCensusDataIncorrectHeader.csv";
@@ -113,6 +114,17 @@ public class StateCensusAnalyserTest {
             stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_EXTENSION);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, e.type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenStateCodeCSVFile_WhenIncorrectDelimiter_ShouldReturnCustomException() {
+        try {
+            stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_INCORRECT_DELIMITER);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.type);
         } catch (IOException e) {
             e.printStackTrace();
         }
