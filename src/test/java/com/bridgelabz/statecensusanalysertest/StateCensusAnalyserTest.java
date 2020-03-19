@@ -19,6 +19,7 @@ public class StateCensusAnalyserTest {
 
     //GIVING WRONG FILE EXTENSION
     private static final String FILE_WITH_WRONG_EXTENSION = "src/test/resources/StateCensusDa.txt";
+    private static final String STATE_CODE_CSV_FILE_WITH_WRONG_EXTENSION = "src/test/resources/StateCode.txt";
 
     //GIVING WRONG FILE DELIMITER
     private static final String FILE_WITH_INCORRECT_DELIMITER = "src/test/resources/StateCensusDataIncorrectDelimiter.csv";
@@ -88,7 +89,7 @@ public class StateCensusAnalyserTest {
         try {
             int numberOfRecord = stateCensusAnalyser.loadStatesCodeCSVData(STATES_CODE_CSV_PATH);
             Assert.assertEquals(37, numberOfRecord);
-        } catch (IOException  e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
@@ -101,6 +102,17 @@ public class StateCensusAnalyserTest {
             stateCensusAnalyser.loadStatesCodeCSVData(STATE_CODE_CSV_WRONG_PATH);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, e.type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenStateCodeCSVFile_WhenIncorrectExtension_ShouldReturnCustomException() {
+        try {
+            stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_EXTENSION);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, e.type);
         } catch (IOException e) {
             e.printStackTrace();
         }
