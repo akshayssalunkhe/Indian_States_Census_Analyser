@@ -61,13 +61,14 @@ public class StateCensusAnalyser {
                     .withType(CSVStates.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-
             Iterator<CSVStates> csvStatesIterator = csvToBean.iterator();
             //LOOP TO ITERATE THROUGH FILE
             while (csvStatesIterator.hasNext()) {
                 csvStatesIterator.next();
                 numberOfRecords++;
             }
+        } catch (RuntimeException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, "WRONG_DELIMITER_OR_HEADER");
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
