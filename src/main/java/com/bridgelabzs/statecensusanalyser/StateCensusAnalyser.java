@@ -25,18 +25,12 @@ public class StateCensusAnalyser {
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            CsvToBean csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(CSVStateCensus.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            Iterator<CSVStateCensus> csvStateCensusIterator = csvToBean.iterator();
+            Iterator<CSVStateCensus> censusCSVIterator = this.getCSVFileIterator(reader, CSVStateCensus.class);
             //LOOP TO ITERATE THROUGH FILE
-            while (csvStateCensusIterator.hasNext()) {
-                csvStateCensusIterator.next();
+            while (censusCSVIterator.hasNext()) {
+                censusCSVIterator.next();
                 numberOfRecords++;
             }
-        } catch (RuntimeException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, "WRONG_DELIMITER_OR_HEADER");
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
@@ -57,21 +51,28 @@ public class StateCensusAnalyser {
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            CsvToBean<CSVStates> csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(CSVStates.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            Iterator<CSVStates> csvStatesIterator = csvToBean.iterator();
+            Iterator<CSVStates> censusCSVIterator = this.getCSVFileIterator(reader, CSVStates.class);
             //LOOP TO ITERATE THROUGH FILE
-            while (csvStatesIterator.hasNext()) {
-                csvStatesIterator.next();
+            while (censusCSVIterator.hasNext()) {
+                censusCSVIterator.next();
                 numberOfRecords++;
             }
-        } catch (RuntimeException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, "WRONG_DELIMITER_OR_HEADER");
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
         return numberOfRecords;
+    }
+
+    //GENERIC METHOD TO BUILD THE CSV FILE
+    private <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws StateCensusAnalyserException {
+        try {
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(csvClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+            return csvToBean.iterator();
+        } catch (RuntimeException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.getMessage());
+        }
     }
 }
