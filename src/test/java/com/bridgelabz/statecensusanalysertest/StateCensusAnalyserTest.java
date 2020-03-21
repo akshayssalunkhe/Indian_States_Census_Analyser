@@ -112,7 +112,7 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenStateCodeCSVFile_WhenIncorrectExtension_ShouldReturnCustomException() {
         try {
-            stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_EXTENSION);
+            stateCensusAnalyser.loadStatesCodeCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_EXTENSION);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, e.type);
         } catch (IOException e) {
@@ -123,7 +123,7 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenStateCodeCSVFile_WhenIncorrectDelimiter_ShouldReturnCustomException() {
         try {
-            stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_INCORRECT_DELIMITER);
+            stateCensusAnalyser.loadStatesCodeCSVData(STATE_CODE_CSV_FILE_WITH_INCORRECT_DELIMITER);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.type);
         } catch (IOException e) {
@@ -134,7 +134,7 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenStateCodeCSVFile_WhenIncorrectHeader_ShouldReturnCustomException() {
         try {
-            stateCensusAnalyser.loadStateCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_HEADER);
+            stateCensusAnalyser.loadStatesCodeCSVData(STATE_CODE_CSV_FILE_WITH_WRONG_HEADER);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.type);
         } catch (IOException e) {
