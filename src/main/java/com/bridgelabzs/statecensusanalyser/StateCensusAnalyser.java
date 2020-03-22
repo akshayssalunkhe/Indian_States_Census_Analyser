@@ -19,22 +19,29 @@ public class StateCensusAnalyser {
 
     //METHOD TO LOAD CSV FILE
     public int loadStateCSVData(String filePath) throws IOException, StateCensusAnalyserException {
-        int numberOfRecords = 0;
         String extension = getFileExtension(filePath);
         //CHECKING FILE EXTENSION
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             Iterator<CSVStateCensus> censusCSVIterator = this.getCSVFileIterator(reader, CSVStateCensus.class);
-            //LOOP TO ITERATE THROUGH FILE
-            while (censusCSVIterator.hasNext()) {
-                censusCSVIterator.next();
-                numberOfRecords++;
-            }
+            return this.getNumberOfRecords(censusCSVIterator);
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         }
-        return numberOfRecords;
+    }
+
+    //METHOD TO LOAD CSV STATE CODE FILE
+    public int loadStatesCodeCSVData(String filePath) throws IOException, StateCensusAnalyserException {
+        String extension = getFileExtension(filePath);
+        if (!extension.equals("csv"))
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
+        try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
+            Iterator<CSVStates> censusCSVIterator = this.getCSVFileIterator(reader, CSVStates.class);
+            return this.getNumberOfRecords(censusCSVIterator);
+        } catch (NoSuchFileException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
+        }
     }
 
     //METHOD TO GET EXTENSION OF FILE
@@ -42,25 +49,6 @@ public class StateCensusAnalyser {
         if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0) {
             return filePath.substring(filePath.lastIndexOf(".") + 1);
         } else return "";
-    }
-
-    //METHOD TO LOAD CSV STATE CODE FILE
-    public int loadStatesCodeCSVData(String filePath) throws IOException, StateCensusAnalyserException {
-        int numberOfRecords = 0;
-        String extension = getFileExtension(filePath);
-        if (!extension.equals("csv"))
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
-        try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            Iterator<CSVStates> censusCSVIterator = this.getCSVFileIterator(reader, CSVStates.class);
-            //LOOP TO ITERATE THROUGH FILE
-            while (censusCSVIterator.hasNext()) {
-                censusCSVIterator.next();
-                numberOfRecords++;
-            }
-        } catch (NoSuchFileException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        }
-        return numberOfRecords;
     }
 
     //GENERIC METHOD TO BUILD THE CSV FILE
@@ -74,5 +62,16 @@ public class StateCensusAnalyser {
         } catch (RuntimeException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.getMessage());
         }
+    }
+
+    //GENERIC METHOD TO COUNT NUMBER OF RECORDS
+    private <E> int getNumberOfRecords(Iterator<E> iterator) {
+        int numberOfRecords = 0;
+        //LOOP TO ITERATE THROUGH FILE
+        while (iterator.hasNext()) {
+            numberOfRecords++;
+            iterator.next();
+        }
+        return numberOfRecords;
     }
 }
