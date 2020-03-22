@@ -22,7 +22,8 @@ public class StateCensusAnalyser {
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            Iterator<CSVStateCensus> censusCSVIterator = new OpenCSVBuilder().getCSVFileIterator(reader, CSVStateCensus.class);
+            ICSVBuilder icsvBuilder = new OpenCSVBuilder();
+            Iterator<CSVStateCensus> censusCSVIterator = icsvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
             return this.getNumberOfRecords(censusCSVIterator);
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
@@ -35,7 +36,8 @@ public class StateCensusAnalyser {
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            Iterator<CSVStates> censusCSVIterator = new OpenCSVBuilder().getCSVFileIterator(reader, CSVStates.class);
+            ICSVBuilder icsvBuilder = new OpenCSVBuilder();
+            Iterator<CSVStates> censusCSVIterator = icsvBuilder.getCSVFileIterator(reader, CSVStates.class);
             return this.getNumberOfRecords(censusCSVIterator);
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
