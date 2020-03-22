@@ -1,6 +1,5 @@
 package com.bridgelabzs.statecensusanalyser;
 
-import com.bridgelabzs.statecensusanalyserexception.StateCensusAnalyserException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -10,7 +9,7 @@ import java.util.Iterator;
 public class OpenCSVBuilder implements ICSVBuilder {
     //GENERIC METHOD TO BUILD THE CSV FILE
     @Override
-    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws StateCensusAnalyserException {
+    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws CSVBuilderException {
         try {
             CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(csvClass);
@@ -18,7 +17,8 @@ public class OpenCSVBuilder implements ICSVBuilder {
             CsvToBean<E> csvToBean = csvToBeanBuilder.build();
             return csvToBean.iterator();
         } catch (RuntimeException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.WRONG_DELIMITER_OR_HEADER, e.getMessage());
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
+
         }
     }
 }
