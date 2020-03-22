@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
-import java.util.Iterator;
+import java.util.List;
 
 public class StateCensusAnalyser {
     public static void main(String[] args) {
@@ -23,8 +23,8 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
-            Iterator<CSVStateCensus> censusCSVIterator = icsvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
-            return this.getNumberOfRecords(censusCSVIterator);
+            List csvList = icsvBuilder.getCSVFileList(reader, CSVStateCensus.class);
+            return csvList.size();
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         } catch (CSVBuilderException e) {
@@ -39,8 +39,8 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
-            Iterator<CSVStates> censusCSVIterator = icsvBuilder.getCSVFileIterator(reader, CSVStates.class);
-            return this.getNumberOfRecords(censusCSVIterator);
+            List csvList = icsvBuilder.getCSVFileList(reader, CSVStates.class);
+            return csvList.size();
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         } catch (CSVBuilderException e) {
@@ -49,20 +49,9 @@ public class StateCensusAnalyser {
     }
 
     //METHOD TO GET EXTENSION OF FILE
-    public String getFileExtension(String filePath) throws StateCensusAnalyserException {
+    public String getFileExtension(String filePath) {
         if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0)
             return filePath.substring(filePath.lastIndexOf(".") + 1);
         else return "";
-    }
-
-    //GENERIC METHOD TO COUNT NUMBER OF RECORDS
-    private <E> int getNumberOfRecords(Iterator<E> iterator) {
-        int numberOfRecords = 0;
-        //LOOP TO ITERATE THROUGH FILE
-        while (iterator.hasNext()) {
-            numberOfRecords++;
-            iterator.next();
-        }
-        return numberOfRecords;
     }
 }
