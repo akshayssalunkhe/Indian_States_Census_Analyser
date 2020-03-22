@@ -16,7 +16,7 @@ public class StateCensusAnalyser {
     }
 
     //METHOD TO LOAD CSV FILE
-    public int loadStateCSVData(String filePath) throws IOException, StateCensusAnalyserException {
+    public int loadStateCSVData(String filePath) throws IOException, StateCensusAnalyserException, CSVBuilderException {
         String extension = getFileExtension(filePath);
         //CHECKING FILE EXTENSION
         if (!extension.equals("csv"))
@@ -27,11 +27,13 @@ public class StateCensusAnalyser {
             return this.getNumberOfRecords(censusCSVIterator);
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
+        } catch (CSVBuilderException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
         }
     }
 
     //METHOD TO LOAD CSV STATE CODE FILE
-    public int loadStatesCodeCSVData(String filePath) throws IOException, StateCensusAnalyserException {
+    public int loadStatesCodeCSVData(String filePath) throws IOException, StateCensusAnalyserException, CSVBuilderException {
         String extension = getFileExtension(filePath);
         if (!extension.equals("csv"))
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
@@ -41,6 +43,8 @@ public class StateCensusAnalyser {
             return this.getNumberOfRecords(censusCSVIterator);
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
+        } catch (CSVBuilderException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
         }
     }
 
