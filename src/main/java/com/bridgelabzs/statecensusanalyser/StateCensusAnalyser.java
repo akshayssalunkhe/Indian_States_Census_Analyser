@@ -44,9 +44,9 @@ public class StateCensusAnalyser {
 
     //METHOD TO GET EXTENSION OF FILE
     public String getFileExtension(String filePath) throws StateCensusAnalyserException {
-        if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0) {
+        if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0)
             return filePath.substring(filePath.lastIndexOf(".") + 1);
-        } else return "";
+        else return "";
     }
 
     //GENERIC METHOD TO COUNT NUMBER OF RECORDS
