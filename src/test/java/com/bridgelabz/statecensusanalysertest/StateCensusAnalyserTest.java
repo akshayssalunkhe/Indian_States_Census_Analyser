@@ -1,5 +1,6 @@
 package com.bridgelabz.statecensusanalysertest;
 
+import com.bridgelabzs.csvstates.CSVStates;
 import com.bridgelabzs.statecensusanalyser.CSVBuilderException;
 import com.bridgelabzs.statecensusanalyser.CSVStateCensus;
 import com.bridgelabzs.statecensusanalyser.StateCensusAnalyser;
@@ -174,6 +175,22 @@ public class StateCensusAnalyserTest {
             sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData(STATE_CENSUS_DATA_PATH);
             CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
             Assert.assertEquals("Andhra Pradesh", censusCSV[0].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenTheStateCodeData_WhenSortedOnStateCode_ShouldReturnSortedResult() {
+        String sortedStatesCodeData = null;
+        try {
+            sortedStatesCodeData = stateCensusAnalyser.getStateCodeWiseSortedData(STATES_CODE_CSV_PATH);
+            CSVStates[] censusCSVStateCode = new Gson().fromJson(sortedStatesCodeData, CSVStates[].class);
+            Assert.assertEquals("AD", censusCSVStateCode[0].stateCode);
         } catch (CSVBuilderException e) {
             e.printStackTrace();
         } catch (IOException e) {
