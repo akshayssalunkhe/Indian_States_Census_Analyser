@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
+import java.util.Iterator;
 import java.util.List;
 
 public class OpenCSVBuilder implements ICSVBuilder {
@@ -15,6 +16,19 @@ public class OpenCSVBuilder implements ICSVBuilder {
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
             return csvToBeanBuilder.parse();
+        } catch (RuntimeException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
+        }
+    }
+
+    @Override
+    public <E> Iterator getCSVFileIterator(Reader reader, Class<E> csvClass) throws CSVBuilderException {
+        try {
+            CsvToBean csvToBeanBuilder = new CsvToBeanBuilder(reader)
+                    .withType(csvClass)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            return csvToBeanBuilder.iterator();
         } catch (RuntimeException e) {
             throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
         }
