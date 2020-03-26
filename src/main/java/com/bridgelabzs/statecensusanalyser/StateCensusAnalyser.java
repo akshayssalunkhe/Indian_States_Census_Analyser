@@ -9,13 +9,23 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StateCensusAnalyser {
     //CREATING GLOBAL LIST OBJECT
     List<CSVStateCensus> csvList = null;
     List<CSVStates> stateCodeList = null;
+
+    //CREATING GLOBAL MAP OBJECT
+    Map<String, CSVStateCensus> stateCensusMap;
+    Map<String, CSVStates> csvStateCodeMap;
+
+    //CONSTRUCTOR
+    public StateCensusAnalyser() {
+        this.stateCensusMap = new HashMap<>();
+        this.csvStateCodeMap = new HashMap<>();
+    }
 
     //MAIN METHOD
     public static void main(String[] args) {
@@ -30,8 +40,14 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
-            csvList = icsvBuilder.getCSVFileList(reader, CSVStateCensus.class);
-            return csvList.size();
+            Iterator<CSVStateCensus> stateCensusIterator = icsvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
+            while (stateCensusIterator.hasNext()) {
+                CSVStateCensus stateCensus = stateCensusIterator.next();
+                this.stateCensusMap.put(stateCensus.state, stateCensus);
+                csvList = stateCensusMap.values().stream().collect(Collectors.toList());
+            }
+            int numberOfRecords = stateCensusMap.size();
+            return numberOfRecords;
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         } catch (CSVBuilderException e) {
@@ -46,8 +62,14 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
-            stateCodeList = icsvBuilder.getCSVFileList(reader, CSVStates.class);
-            return stateCodeList.size();
+            Iterator<CSVStates> stateCodeIterator = icsvBuilder.getCSVFileIterator(reader, CSVStates.class);
+            while (stateCodeIterator.hasNext()) {
+                CSVStates stateCode = stateCodeIterator.next();
+                this.csvStateCodeMap.put(stateCode.stateCode, stateCode);
+                stateCodeList = csvStateCodeMap.values().stream().collect(Collectors.toList());
+            }
+            int numberOfRecords = csvStateCodeMap.size();
+            return numberOfRecords;
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         } catch (CSVBuilderException e) {
