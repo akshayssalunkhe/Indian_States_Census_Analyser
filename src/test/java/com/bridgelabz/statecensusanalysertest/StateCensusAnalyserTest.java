@@ -205,7 +205,7 @@ public class StateCensusAnalyserTest {
     public void givenTheStateCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
         try {
             stateCensusAnalyser.loadStateCSVData(STATE_CENSUS_DATA_PATH);
-            String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData();
+            String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData(STATE_CENSUS_DATA_PATH);
             CSVStateCensus[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
             Assert.assertEquals(199812341, csvStateCensuses[0].population);
         } catch (StateCensusAnalyserException e) {
@@ -221,9 +221,24 @@ public class StateCensusAnalyserTest {
     public void givenTheStateCensusData_WhenSortedOnDensityPerSqKm_ShouldReturnSortedResult() {
         try {
             stateCensusAnalyser.loadStateCSVData(STATE_CENSUS_DATA_PATH);
-            String sortedCensusData = stateCensusAnalyser.getSortedDataAccordingToPopulationDensityPerSqKm(STATES_CODE_CSV_PATH);
+            String sortedCensusData = stateCensusAnalyser.getSortedDataAccordingToPopulationDensityPerSqKm(STATE_CENSUS_DATA_PATH);
             CensusDAO[] csvStateCensus = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals(1102, csvStateCensus[0].density);
+        } catch (StateCensusAnalyserException e) {
+            e.getStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenTheStateCensusData_WhenSortedOnAreaInPerSqKm_ShouldReturnSortedResult() {
+        try {
+            String sortedCensusData = stateCensusAnalyser.getSortedDataAccordingToAreaInSquareKilometer(STATE_CENSUS_DATA_PATH);
+            CensusDAO[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals(342239, csvStateCensuses[0].area);
         } catch (StateCensusAnalyserException e) {
             e.getStackTrace();
         } catch (IOException e) {
