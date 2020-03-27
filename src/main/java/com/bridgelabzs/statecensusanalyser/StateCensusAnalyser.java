@@ -13,18 +13,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StateCensusAnalyser {
-    //CREATING GLOBAL LIST OBJECT
-    List<CSVStateCensus> csvList = null;
-    List<CSVStates> stateCodeList = null;
-
-    //CREATING GLOBAL MAP OBJECT
-    Map<String, CSVStateCensus> stateCensusMap;
-    Map<String, CSVStates> csvStateCodeMap;
+    List<CensusDAO> censusList = null;
+    Map<String, CensusDAO> censusMap = null;
 
     //CONSTRUCTOR
     public StateCensusAnalyser() {
-        this.stateCensusMap = new HashMap<>();
-        this.csvStateCodeMap = new HashMap<>();
+        this.censusMap = new HashMap<>();
+        this.censusList = new ArrayList<>();
     }
 
     //MAIN METHOD
@@ -42,11 +37,11 @@ public class StateCensusAnalyser {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
             Iterator<CSVStateCensus> stateCensusIterator = icsvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
             while (stateCensusIterator.hasNext()) {
-                CSVStateCensus stateCensus = stateCensusIterator.next();
-                this.stateCensusMap.put(stateCensus.state, stateCensus);
-                csvList = stateCensusMap.values().stream().collect(Collectors.toList());
+                CensusDAO censusDAO = new CensusDAO(stateCensusIterator.next());
+                this.censusMap.put(censusDAO.state, censusDAO);
+                censusList = censusMap.values().stream().collect(Collectors.toList());
             }
-            int numberOfRecords = stateCensusMap.size();
+            int numberOfRecords = censusMap.size();
             return numberOfRecords;
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
@@ -64,11 +59,11 @@ public class StateCensusAnalyser {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
             Iterator<CSVStates> stateCodeIterator = icsvBuilder.getCSVFileIterator(reader, CSVStates.class);
             while (stateCodeIterator.hasNext()) {
-                CSVStates stateCode = stateCodeIterator.next();
-                this.csvStateCodeMap.put(stateCode.stateCode, stateCode);
-                stateCodeList = csvStateCodeMap.values().stream().collect(Collectors.toList());
+                CensusDAO censusDAO = new CensusDAO(stateCodeIterator.next());
+                this.censusMap.put(censusDAO.stateCode, censusDAO);
+                censusList = censusMap.values().stream().collect(Collectors.toList());
             }
-            int numberOfRecords = csvStateCodeMap.size();
+            int numberOfRecords = censusMap.size();
             return numberOfRecords;
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
@@ -87,34 +82,34 @@ public class StateCensusAnalyser {
     //METHOD TO GET STATE WISE SORTED DATA
     public String getStateWiseSortedCensusData(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
         loadStateCSVData(csvFilePath);
-        if (csvList == null || csvList.size() == 0)
+        if (censusList == null || censusList.size() == 0)
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CSVStateCensus> censusComparator = Comparator.comparing(census -> census.state);
-        this.sortCSVCensusData(csvList, censusComparator);
-        String toJson = new Gson().toJson(csvList);
-        return toJson;
+        Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.state);
+        this.sortCSVCensusData(censusComparator);
+        String sortedStateCensusJson = new Gson().toJson(censusList);
+        return sortedStateCensusJson;
     }
 
     //METHOD TO GET SORTED STATE CODE DATA
     public String getStateCodeWiseSortedData(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
         loadStatesCodeCSVData(csvFilePath);
-        if (stateCodeList == null || stateCodeList.size() == 0)
+        if (censusList == null || censusList.size() == 0)
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CSVStates> stateCodeComparator = Comparator.comparing(census -> census.stateCode);
-        this.sortCSVCensusData(stateCodeList, stateCodeComparator);
-        String sortedStateCodeJson = new Gson().toJson(stateCodeList);
+        Comparator<CensusDAO> stateCodeComparator = Comparator.comparing(censusDAO -> censusDAO.stateCode);
+        this.sortCSVCensusData(stateCodeComparator);
+        String sortedStateCodeJson = new Gson().toJson(censusList);
         return sortedStateCodeJson;
     }
 
-    //GENERIC METHOD TO SORT CENSUS DATA
-    public <E> void sortCSVCensusData(List<E> csvList, Comparator<E> censusComparator) {
-        for (int indexOne = 0; indexOne < csvList.size(); indexOne++) {
-            for (int indexTwo = 0; indexTwo < csvList.size() - indexOne - 1; indexTwo++) {
-                E census1 = csvList.get(indexTwo);
-                E census2 = csvList.get(indexTwo + 1);
-                if (censusComparator.compare(census1, census2) > 0) {
-                    csvList.set(indexTwo, census2);
-                    csvList.set(indexTwo + 1, census1);
+    // METHOD TO SORT CSV DATA
+    public void sortCSVCensusData(Comparator<CensusDAO> censusComparator) {
+        for (int indexOne = 0; indexOne < censusList.size() - 1; indexOne++) {
+            for (int indexTwo = 0; indexTwo < censusList.size() - indexOne - 1; indexTwo++) {
+                CensusDAO censusOne = censusList.get(indexTwo);
+                CensusDAO censusTwo = censusList.get(indexTwo + 1);
+                if (censusComparator.compare(censusOne, censusTwo) > 0) {
+                    censusList.set(indexTwo, censusTwo);
+                    censusList.set(indexTwo + 1, censusOne);
                 }
             }
         }
