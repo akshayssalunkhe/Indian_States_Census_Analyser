@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public  class StateCensusAnalyserTest {
+public class StateCensusAnalyserTest {
 
     //GIVING FILE PATH
     private static final String STATE_CENSUS_DATA_PATH = "src/test/resources/StateCensusData.csv";
