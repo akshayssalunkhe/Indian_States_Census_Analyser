@@ -17,6 +17,8 @@ public class StateCensusAnalyserTest {
     //GIVING FILE PATH
     private static final String STATE_CENSUS_DATA_PATH = "src/test/resources/StateCensusData.csv";
     private static final String STATES_CODE_CSV_PATH = "src/test/resources/StateCode.csv";
+    private static final String US_CENSUS_DATA_CSV_FILE_PATH = "src/test/resources/USCensusData.csv";
+
 
     //GIVING WRONG FILE PATH
     private static final String STATE_CENSUS_DATA_WRONG_PATH = "src/test/resources/StateCensusDa.csv";
@@ -241,6 +243,20 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(342239, csvStateCensuses[0].area);
         } catch (StateCensusAnalyserException e) {
             e.getStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenUSCensusCSVFile_WhenNumberOfRecordsMatches_ShouldReturnTrue() {
+        try {
+            int numberOfRecords = stateCensusAnalyser.loadCSVDataFileForUSCensus(US_CENSUS_DATA_CSV_FILE_PATH);
+            Assert.assertEquals(51, numberOfRecords);
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CSVBuilderException e) {
