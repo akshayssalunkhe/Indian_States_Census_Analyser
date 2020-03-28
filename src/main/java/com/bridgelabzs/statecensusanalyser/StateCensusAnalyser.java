@@ -70,6 +70,24 @@ public class StateCensusAnalyser {
         }
     }
 
+    //FUNCTION TO LOAD UNITED STATES CENSUS DATA
+    public int loadCSVDataFileForUSCensus(String filePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
+        String extension = getFileExtension(filePath);
+        //CHECKING FILE EXTENSION
+        if (!extension.equals("csv"))
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_EXTENSION, "NO_SUCH_EXTENSION");
+        try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
+            ICSVBuilder icsvBuilder = new OpenCSVBuilder();
+            List<CSVUnitedStatesCensus> csvUSCensusList = icsvBuilder.getCSVFileList(reader, CSVUnitedStatesCensus.class);
+            int numberOfRecords = csvUSCensusList.size();
+            return numberOfRecords;
+        } catch (NoSuchFileException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
+        } catch (CSVBuilderException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.DELIMITER_OR_HEADER_INCORRECT, "DELIMITER_OR_HEADER_INCORRECT_ERROR_ BUILDING_CSV");
+        }
+    }
+
     //METHOD TO GET EXTENSION OF FILE
     public String getFileExtension(String filePath) {
         if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0)
