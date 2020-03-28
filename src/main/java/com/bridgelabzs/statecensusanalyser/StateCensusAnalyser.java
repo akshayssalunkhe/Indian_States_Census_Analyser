@@ -11,6 +11,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
     List<CensusDAO> censusList = null;
@@ -36,11 +37,10 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
             Iterator<CSVStateCensus> stateCensusIterator = icsvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
-            while (stateCensusIterator.hasNext()) {
-                CensusDAO censusDAO = new CensusDAO(stateCensusIterator.next());
-                this.censusMap.put(censusDAO.state, censusDAO);
-                censusList = censusMap.values().stream().collect(Collectors.toList());
-            }
+            Iterable<CSVStateCensus> stateCensuses = () -> stateCensusIterator;
+            StreamSupport.stream(stateCensuses.spliterator(), false)
+                    .forEach(csvStateCensus -> censusMap.put(csvStateCensus.state, new CensusDAO(csvStateCensus)));
+            censusList = censusMap.values().stream().collect(Collectors.toList());
             int numberOfRecords = censusMap.size();
             return numberOfRecords;
         } catch (NoSuchFileException e) {
@@ -58,11 +58,9 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             ICSVBuilder icsvBuilder = new OpenCSVBuilder();
             Iterator<CSVStates> stateCodeIterator = icsvBuilder.getCSVFileIterator(reader, CSVStates.class);
-            while (stateCodeIterator.hasNext()) {
-                CensusDAO censusDAO = new CensusDAO(stateCodeIterator.next());
-                this.censusMap.put(censusDAO.stateCode, censusDAO);
-                censusList = censusMap.values().stream().collect(Collectors.toList());
-            }
+            Iterable<CSVStates> stateCodes = () -> stateCodeIterator;
+            StreamSupport.stream(stateCodes.spliterator(), false)
+                    .forEach(csvStateCode -> censusMap.put(csvStateCode.stateCode, new CensusDAO(csvStateCode)));
             int numberOfRecords = censusMap.size();
             return numberOfRecords;
         } catch (NoSuchFileException e) {
