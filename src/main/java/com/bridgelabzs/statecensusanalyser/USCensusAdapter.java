@@ -1,4 +1,12 @@
 package com.bridgelabzs.statecensusanalyser;
 
-public class USCensusAdapter {
+import com.bridgelabzs.statecensusanalyserexception.StateCensusAnalyserException;
+
+import java.util.Map;
+
+public class USCensusAdapter extends CensusAdapter {
+    @Override
+    public Map<String, CensusDAO> loadCensusData(String... csvFilePath) throws StateCensusAnalyserException {
+        return super.loadCensusData(CSVStateCensus.class, csvFilePath[0]);
+    }
 }
