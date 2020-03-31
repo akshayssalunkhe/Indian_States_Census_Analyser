@@ -25,4 +25,12 @@ public class CensusDAO {
         this.tin = csvStates.tin;
         this.stateCode = csvStates.stateCode;
     }
+
+    public CensusDAO(CSVUSCensus csvUSCensus) {
+        this.state = csvUSCensus.state;
+        this.stateCode = csvUSCensus.stateId;
+        this.population = csvUSCensus.population;
+        this.area = csvUSCensus.totalArea;
+        this.density = csvUSCensus.populationDensity;
+    }
 }
