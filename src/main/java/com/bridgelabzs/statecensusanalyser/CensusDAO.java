@@ -9,9 +9,9 @@ public class CensusDAO {
     public String stateName;
     public int serialNumber;
     public String state;
-    public int population;
-    public int area;
-    public int density;
+    public double population;
+    public double area;
+    public double density;
     public String stateCode;
 
     public CensusDAO(CSVStateCensus csvStateCensus) {
@@ -48,7 +48,7 @@ public class CensusDAO {
         return null;
     }
 
-    public int getPopulation() {
+    public double getPopulation() {
         return population;
     }
 
@@ -63,6 +63,8 @@ public class CensusDAO {
     public Object getCensusDTO(StateCensusAnalyser.Country country) {
         if (country.equals(StateCensusAnalyser.Country.INDIA))
             return new CSVStateCensus(state, population, area, density);
+        if (country.equals(StateCensusAnalyser.Country.US))
+            return new CSVUSCensus(stateCode, state, population, area, density);
         return null;
     }
 }

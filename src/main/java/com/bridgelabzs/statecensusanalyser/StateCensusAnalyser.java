@@ -41,29 +41,4 @@ public class StateCensusAnalyser {
                 .collect(Collectors.toCollection(ArrayList::new));
         return new Gson().toJson(arrayList);
     }
-
-    //METHOD TO SORT US CENSUS DATA BY POPULATION
-    public String getPopulationWiseUSSortedCensusData() throws StateCensusAnalyserException {
-        if (censusList == null || censusList.size() == 0)
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.population);
-        this.sortCSVCensusData(censusComparator);
-        Collections.reverse(censusList);
-        String sortedStateCensusJson = new Gson().toJson(censusList);
-        return sortedStateCensusJson;
-    }
-
-    //METHOD TO SORT CSV DATA
-    public void sortCSVCensusData(Comparator<CensusDAO> censusComparator) {
-        for (int indexOne = 0; indexOne < censusList.size() - 1; indexOne++) {
-            for (int indexTwo = 0; indexTwo < censusList.size() - indexOne - 1; indexTwo++) {
-                CensusDAO censusOne = censusList.get(indexTwo);
-                CensusDAO censusTwo = censusList.get(indexTwo + 1);
-                if (censusComparator.compare(censusOne, censusTwo) > 0) {
-                    censusList.set(indexTwo, censusTwo);
-                    censusList.set(indexTwo + 1, censusOne);
-                }
-            }
-        }
-    }
 }

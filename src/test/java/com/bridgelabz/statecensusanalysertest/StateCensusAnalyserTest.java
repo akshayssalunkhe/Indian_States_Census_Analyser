@@ -151,7 +151,7 @@ public class StateCensusAnalyserTest {
             indianCensusAnalyser.loadStateCensusCSVData(INDIA, STATE_CENSUS_DATA_PATH);
             String sortedCensusData = indianCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.POPULATION);
             CSVStateCensus[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
-            Assert.assertEquals(199812341, csvStateCensuses[0].population);
+            Assert.assertEquals("Uttar Pradesh", csvStateCensuses[0].state);
         } catch (StateCensusAnalyserException e) {
             e.getStackTrace();
         }
@@ -163,7 +163,7 @@ public class StateCensusAnalyserTest {
             indianCensusAnalyser.loadStateCensusCSVData(INDIA, STATE_CENSUS_DATA_PATH);
             String sortedCensusData = indianCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.DENSITY);
             CensusDAO[] csvStateCensus = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals(1102, csvStateCensus[0].density);
+            Assert.assertEquals("Bihar", csvStateCensus[0].state);
         } catch (StateCensusAnalyserException e) {
             e.getStackTrace();
         }
