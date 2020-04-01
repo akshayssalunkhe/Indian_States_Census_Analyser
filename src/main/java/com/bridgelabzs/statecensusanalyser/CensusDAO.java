@@ -14,6 +14,7 @@ public class CensusDAO {
     public double density;
     public String stateCode;
 
+    //CONSTRUCTOR FOR STATE CENSUS
     public CensusDAO(CSVStateCensus csvStateCensus) {
         this.state = csvStateCensus.state;
         this.population = csvStateCensus.population;
@@ -21,6 +22,7 @@ public class CensusDAO {
         this.density = csvStateCensus.density;
     }
 
+    //CONSTRUCTOR FOR STATE CODE
     public CensusDAO(CSVStates csvStates) {
         this.serialNumber = csvStates.serialNumber;
         this.stateName = csvStates.stateName;
@@ -28,6 +30,7 @@ public class CensusDAO {
         this.stateCode = csvStates.stateCode;
     }
 
+    //CONSTRUCTOR FOR US CENSUS
     public CensusDAO(CSVUSCensus csvUSCensus) {
         this.state = csvUSCensus.state;
         this.stateCode = csvUSCensus.stateId;
@@ -36,6 +39,7 @@ public class CensusDAO {
         this.density = csvUSCensus.populationDensity;
     }
 
+    //METHOD TO SORT COMPARATOR
     public static Comparator<CensusDAO> getSortComparator(StateCensusAnalyser.SortingMode mode) {
         if (mode.equals(StateCensusAnalyser.SortingMode.STATE))
             return Comparator.comparing(census -> census.state);
@@ -60,6 +64,7 @@ public class CensusDAO {
         return density;
     }
 
+    //METHOD TO RETURN DTO OBJECT
     public Object getCensusDTO(StateCensusAnalyser.Country country) {
         if (country.equals(StateCensusAnalyser.Country.INDIA))
             return new CSVStateCensus(state, population, area, density);

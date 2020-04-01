@@ -18,6 +18,7 @@ public class CSVUSCensus {
     @CsvBindByName(column = "Population Density", required = true)
     public double populationDensity;
 
+    //PARAMETRISED CONSTRUCTOR
     public CSVUSCensus(String stateId, String state, double population, double totalArea, double populationDensity) {
         this.stateId = stateId;
         this.state = state;
@@ -26,6 +27,7 @@ public class CSVUSCensus {
         this.populationDensity = populationDensity;
     }
 
+    //DEFAULT CONSTRUCTOR
     public CSVUSCensus() {
     }
 }

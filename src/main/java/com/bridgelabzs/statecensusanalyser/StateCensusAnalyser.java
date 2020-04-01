@@ -16,8 +16,10 @@ public class StateCensusAnalyser {
         this.country = country;
     }
 
+    //ENUM FOR COUNTRY
     public enum Country {INDIA, US}
 
+    //ENUM FOR SORTING MODE
     public enum SortingMode {STATE, POPULATION, DENSITY, AREA}
 
     //MAIN METHOD
@@ -25,6 +27,7 @@ public class StateCensusAnalyser {
         System.out.println("Welcome To Indian States Census Analyser Problem");
     }
 
+    //METHOD TO LOAD CENSUS CSV DATA
     public int loadStateCensusCSVData(Country country, String... csvFilePath) throws StateCensusAnalyserException {
         censusDAOMap = CensusAdapterFactory.getCensusData(country, csvFilePath);
         censusList = censusDAOMap.values().stream().collect(Collectors.toList());
