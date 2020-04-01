@@ -190,12 +190,11 @@ public class StateCensusAnalyserTest {
         }
     }
 
-
     @Test
     public void givenTheUSCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
         try {
-            int numberOfRecords = usCensusAnalyser.loadStateCensusCSVData(StateCensusAnalyser.Country.US, US_CENSUS_DATA_CSV_FILE_PATH);
-            String sortedCensusData = usCensusAnalyser.getPopulationWiseUSSortedCensusData();
+            usCensusAnalyser.loadStateCensusCSVData(StateCensusAnalyser.Country.US, US_CENSUS_DATA_CSV_FILE_PATH);
+            String sortedCensusData = usCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.POPULATION);
             CensusDAO[] censusDAOS = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals("California", censusDAOS[0].state);
         } catch (StateCensusAnalyserException e) {
