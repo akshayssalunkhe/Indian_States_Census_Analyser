@@ -1,6 +1,7 @@
 package com.bridgelabz.statecensusanalysertest;
 
 import com.bridgelabzs.statecensusanalyser.CSVStateCensus;
+import com.bridgelabzs.statecensusanalyser.CSVUSCensus;
 import com.bridgelabzs.statecensusanalyser.CensusDAO;
 import com.bridgelabzs.statecensusanalyser.StateCensusAnalyser;
 import com.bridgelabzs.statecensusanalyserexception.StateCensusAnalyserException;
@@ -191,12 +192,36 @@ public class StateCensusAnalyserTest {
     }
 
     @Test
+    public void givenTheUSCensusData_WhenSortedByPopulationDensity_ShouldReturnSortedResult() {
+        try {
+            usCensusAnalyser.loadStateCensusCSVData(US, US_CENSUS_DATA_CSV_FILE_PATH);
+            String sortedCensusData = usCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.DENSITY);
+            CSVUSCensus[] csvusCensuses = new Gson().fromJson(sortedCensusData, CSVUSCensus[].class);
+            Assert.assertEquals("District of Columbia", csvusCensuses[0].state);
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void givenTheUSCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
         try {
             usCensusAnalyser.loadStateCensusCSVData(StateCensusAnalyser.Country.US, US_CENSUS_DATA_CSV_FILE_PATH);
             String sortedCensusData = usCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.POPULATION);
             CensusDAO[] censusDAOS = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals("California", censusDAOS[0].state);
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenTheUSCensusData_WhenSortedByArea_ShouldReturnSortedResult() {
+        try {
+            usCensusAnalyser.loadStateCensusCSVData(US, US_CENSUS_DATA_CSV_FILE_PATH);
+            String sortedCensusData = usCensusAnalyser.getSortedCensusData(StateCensusAnalyser.SortingMode.AREA);
+            CSVUSCensus[] csvusCensuses = new Gson().fromJson(sortedCensusData, CSVUSCensus[].class);
+            Assert.assertEquals("Alaska", csvusCensuses[0].state);
         } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
         }
