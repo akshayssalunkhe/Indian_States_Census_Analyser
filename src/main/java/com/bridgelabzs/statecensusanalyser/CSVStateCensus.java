@@ -10,8 +10,18 @@ public class CSVStateCensus {
     public int population;
 
     @CsvBindByName(column = "AreaInSqKm", required = true)
-    public int areaInSqKm;
+    public int area;
 
     @CsvBindByName(column = "DensityPerSqKm", required = true)
-    public int densityPerSqKm;
+    public int density;
+
+    public CSVStateCensus(String state, int population, int area, int density) {
+        this.state = state;
+        this.population = population;
+        this.area = area;
+        this.density = density;
+    }
+
+    public CSVStateCensus() {
+    }
 }

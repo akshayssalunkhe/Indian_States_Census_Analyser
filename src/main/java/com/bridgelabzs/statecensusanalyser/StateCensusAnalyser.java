@@ -3,27 +3,27 @@ package com.bridgelabzs.statecensusanalyser;
 import com.bridgelabzs.statecensusanalyserexception.StateCensusAnalyserException;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class StateCensusAnalyser {
     List<CensusDAO> censusList = null;
     Map<String, CensusDAO> censusDAOMap = null;
+    private Country country;
 
     //CONSTRUCTOR
-    public StateCensusAnalyser() {
-        this.censusList = new ArrayList<>();
-        this.censusDAOMap = new HashMap<>();
+    public StateCensusAnalyser(Country country) {
+        this.country = country;
     }
 
     public enum Country {INDIA, US}
+
+    public enum SortingMode {STATE, POPULATION, DENSITY, AREA}
 
     //MAIN METHOD
     public static void main(String[] args) {
         System.out.println("Welcome To Indian States Census Analyser Problem");
     }
-
 
     public int loadStateCensusCSVData(Country country, String... csvFilePath) throws StateCensusAnalyserException {
         censusDAOMap = CensusAdapterFactory.getCensusData(country, csvFilePath);
@@ -31,53 +31,22 @@ public class StateCensusAnalyser {
         return censusDAOMap.size();
     }
 
-    //METHOD TO GET STATE WISE SORTED DATA
-    public String getStateWiseSortedCensusData(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
+    //METHOD TO SORT CENSUS DATA
+    public String getSortedCensusData(SortingMode mode) throws StateCensusAnalyserException {
         if (censusList == null || censusList.size() == 0)
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.state);
-        this.sortCSVCensusData(censusComparator);
-        String sortedStateCensusJson = new Gson().toJson(censusList);
-        return sortedStateCensusJson;
+        ArrayList arrayList = censusDAOMap.values().stream()
+                .sorted(CensusDAO.getSortComparator(mode))
+                .map(censusDAO -> censusDAO.getCensusDTO(country))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return new Gson().toJson(arrayList);
     }
 
-    //METHOD TO GET SORTED STATE CODE DATA
-    public String getStateCodeWiseSortedData(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
-        if (censusList == null || censusList.size() == 0)
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CensusDAO> stateCodeComparator = Comparator.comparing(censusDAO -> censusDAO.stateCode);
-        this.sortCSVCensusData(stateCodeComparator);
-        String sortedStateCodeJson = new Gson().toJson(censusList);
-        return sortedStateCodeJson;
-    }
-
-    //METHOD TO SORT STATE CENSUS DATA AS PER POPULATION
-    public String getPopulationWiseSortedCensusData(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
+    //METHOD TO SORT US CENSUS DATA BY POPULATION
+    public String getPopulationWiseUSSortedCensusData() throws StateCensusAnalyserException {
         if (censusList == null || censusList.size() == 0)
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
         Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.population);
-        this.sortCSVCensusData(censusComparator);
-        Collections.reverse(censusList);
-        String sortedStateCensusJson = new Gson().toJson(censusList);
-        return sortedStateCensusJson;
-    }
-
-    //METHOD TO SORT STATE CENSUS DATA AS PER POPULATION DENSITY PER SQUARE KILOMETER
-    public String getSortedDataAccordingToPopulationDensityPerSqKm(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
-        if (censusList == null || censusList.size() == 0)
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.density);
-        this.sortCSVCensusData(censusComparator);
-        Collections.reverse(censusList);
-        String sortedStateCensusJson = new Gson().toJson(censusList);
-        return sortedStateCensusJson;
-    }
-
-    //METHOD TO SORT STATE CENSUS DATA AS PER POPULATION DENSITY PER SQUARE KILOMETER
-    public String getSortedDataAccordingToAreaInSquareKilometer(String csvFilePath) throws StateCensusAnalyserException, IOException, CSVBuilderException {
-        if (censusList == null || censusList.size() == 0)
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_FOUND, "NO_SUCH_FILE_FOUND");
-        Comparator<CensusDAO> censusComparator = Comparator.comparing(censusDAO -> censusDAO.area);
         this.sortCSVCensusData(censusComparator);
         Collections.reverse(censusList);
         String sortedStateCensusJson = new Gson().toJson(censusList);
